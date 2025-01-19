@@ -31,7 +31,7 @@ resource "kubernetes_deployment" "redditproducer" {
       spec {
         container {
           name = "redditproducer"
-          image = "nama1arpit/reddit_producer:latest"
+          image = "bencj96/reddit_producer:latest"
           image_pull_policy = "Always"
 
           volume_mount {

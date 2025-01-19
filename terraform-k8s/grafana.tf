@@ -32,7 +32,7 @@ resource "kubernetes_deployment" "grafana" {
       spec {
         container {
           name  = "grafana"
-          image = "nama1arpit/grafana:latest"
+          image = "bencj96/grafana:latest"
 
           port {
             container_port = 3000

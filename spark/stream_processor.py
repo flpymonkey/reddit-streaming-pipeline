@@ -1,16 +1,8 @@
-from nltk.sentiment import SentimentIntensityAnalyzer
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf, from_json, col, from_unixtime, avg, current_timestamp
 from pyspark.sql.types import StringType, StructType, StructField, IntegerType, BooleanType, FloatType
 import uuid
 
-
-def analyze_sentiment(text):
-    analyzer = SentimentIntensityAnalyzer()
-    sentiment = analyzer.polarity_scores(text)
-    return sentiment['compound']
-
-sentiment_udf = udf(analyze_sentiment, FloatType())
 
 def make_uuid():
     return udf(lambda: str(uuid.uuid1()), StringType())()
@@ -73,10 +65,6 @@ output_df = parsed_df.select(
     .withColumn("ingest_timestamp", current_timestamp()) \
     .drop("timestamp")
 
-# adding sentiment score
-output_df = output_df.withColumn(
-    'sentiment_score', sentiment_udf(output_df['body'])
-)
 
 # https://stackoverflow.com/questions/64922560/pyspark-and-kafka-set-are-gone-some-data-may-have-been-missed
 # adding failOnDataLoss as the checkpoint change with kafka brokers going down
@@ -86,19 +74,5 @@ output_df.writeStream \
     .format("org.apache.spark.sql.cassandra") \
     .options(table="comments", keyspace="reddit") \
     .start()
-
-# adding moving averages in another df
-summary_df = output_df.withWatermark("ingest_timestamp", "1 minute").groupBy("subreddit") \
-    .agg(avg("sentiment_score").alias("sentiment_score_avg")) \
-    .withColumn("uuid", make_uuid()) \
-    .withColumn("ingest_timestamp", current_timestamp())
-
-summary_df.writeStream.trigger(processingTime="5 seconds") \
-    .foreachBatch(
-        lambda batchDF, batchID: batchDF.write.format("org.apache.spark.sql.cassandra") \
-            .option("checkpointLocation", "/tmp/check_point/") \
-            .options(table="subreddit_sentiment_avg", keyspace="reddit") \
-            .mode("append").save()
-    ).outputMode("update").start()
 
 spark.streams.awaitAnyTermination()

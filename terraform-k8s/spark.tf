@@ -30,7 +30,7 @@ resource "kubernetes_deployment" "spark" {
       spec {
         container {
           name = "spark"
-          image = "nama1arpit/spark_stream_processor:latest"
+          image = "bencj96/spark_stream_processor:latest"
           image_pull_policy = "Always"
 
           # environment variables

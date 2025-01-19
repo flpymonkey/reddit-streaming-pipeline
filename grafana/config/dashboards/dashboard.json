@@ -29,41 +29,40 @@
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "series",
-            "axisLabel": "Sentiment Score",
-            "axisPlacement": "auto",
+            "drawStyle": "bar",
             "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
             "lineWidth": 1.5,
+            "fillOpacity": 0.7,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
             "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "Number of Rows",
+            "axisColorMode": "series",
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
             },
             "thresholdsStyle": {
               "mode": "off"
+            },
+            "lineStyle": {
+              "fill": "solid"
             }
+          },
+          "color": {
+            "mode": "palette-classic"
           },
           "mappings": [],
           "thresholds": {
@@ -90,22 +89,22 @@
       },
       "id": 1,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
         }
       },
       "targets": [
         {
           "columnId": "subreddit",
           "columnTime": "api_timestamp",
-          "columnValue": "upvotes",
+          "columnValue": "row_count",
           "datasource": {
             "type": "hadesarchitect-cassandra-datasource",
             "uid": "Yc87Z6OJ4wsv"
@@ -115,12 +114,12 @@
           "queryType": "query",
           "rawQuery": true,
           "refId": "A",
-          "table": "subreddit_sentiment_avg",
-          "target": "select subreddit, CAST(sentiment_score_avg AS double), ingest_timestamp from reddit.subreddit_sentiment_avg where subreddit IN ('AskReddit', 'funny', 'gaming', 'aww', 'worldnews') and ingest_timestamp>$__timeFrom and ingest_timestamp<$__timeTo ALLOW FILTERING;"
+          "table": "comments",
+          "target": "SELECT subreddit, COUNT(*) AS row_count FROM reddit.comments WHERE subreddit IN ('AskReddit', 'funny', 'gaming', 'aww', 'worldnews') AND ingest_timestamp > $__timeFrom AND ingest_timestamp < $__timeTo GROUP BY subreddit ALLOW FILTERING;"
         }
       ],
-      "title": "Top subreddits",
-      "type": "timeseries"
+      "title": "Number of Rows per Subreddit",
+      "type": "barchart"
     },
     {
       "datasource": {
@@ -209,7 +208,7 @@
           "queryType": "query",
           "rawQuery": true,
           "refId": "A",
-          "target": "select subreddit, CAST(sentiment_score_avg AS double), ingest_timestamp from reddit.subreddit_sentiment_avg where subreddit IN ('india', 'usa', 'unitedkingdom', 'australia', 'russia', 'China') and ingest_timestamp>$__timeFrom and ingest_timestamp<$__timeTo;"
+          "target": "SELECT subreddit, COUNT(*) AS comment_count FROM reddit.comments WHERE subreddit IN ('india', 'usa', 'unitedkingdom', 'australia', 'russia', 'china') AND ingest_timestamp > $__timeFrom AND ingest_timestamp < $__timeTo GROUP BY subreddit ALLOW FILTERING;"
         }
       ],
       "title": "Countries",

@@ -43,7 +43,7 @@ resource "kubernetes_deployment" "cassandra" {
 
         container {
           name  = "cassandra"
-          image = "nama1arpit/cassandra:latest"
+          image = "bencj96/cassandra:latest"
           image_pull_policy = "Always"
 
           port {
@@ -108,7 +108,7 @@ resource "kubernetes_deployment" "cassandra" {
 
         container {
           name  = "cassandrainit"
-          image = "nama1arpit/cassandra:latest"
+          image = "bencj96/cassandra:latest"
           image_pull_policy = "Always"
 
           command = [
