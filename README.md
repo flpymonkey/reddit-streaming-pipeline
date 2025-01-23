@@ -1,5 +1,6 @@
 # Changing and testing locally
 
+## Publish changes to docker before running minikube
 If you make changes to any of the docker containers, you will need to rerun:
 `bash ./docker_image_publish.sh`
 
@@ -7,6 +8,13 @@ This will publish all the changes to docker.
 
 Then rerun the startup steps below to use the containers with minikube.
 
+## Inspect the database locally
+
+1. Ensure pods are running: `kubectl get pods -n redditpipeline`
+2. Query the Casandra Database: `kubectl exec -it cassandra-75f9bcf644-fxd9b -n redditpipeline -- cqlsh`
+3. For example: `SELECT subreddit, COUNT(*) AS row_count FROM reddit.comments WHERE subreddit IN ('AskReddit', 'funny', 'gaming', 'aww', 'worldnews') GROUP BY subreddit;`
+
+1. Start the grafana dashboard: 
 
 # Reddit Sentiment Analysis Data Pipeline
 ## Project Overview

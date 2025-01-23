@@ -24,60 +24,22 @@
   "panels": [
     {
       "datasource": {
-        "type": "hadesarchitect-cassandra-datasource",
-        "uid": "Yc87Z6OJ4wsv"
+        "uid": "Yc87Z6OJ4wsv",
+        "type": "hadesarchitect-cassandra-datasource"
       },
       "fieldConfig": {
         "defaults": {
           "custom": {
-            "drawStyle": "bar",
-            "barAlignment": 0,
-            "lineWidth": 1.5,
-            "fillOpacity": 0.7,
-            "gradientMode": "none",
-            "spanNulls": false,
-            "showPoints": "never",
-            "pointSize": 5,
-            "stacking": {
-              "mode": "none",
-              "group": "A"
-            },
-            "axisPlacement": "auto",
-            "axisLabel": "Number of Rows",
-            "axisColorMode": "series",
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "axisCenteredZero": false,
             "hideFrom": {
               "tooltip": false,
               "viz": false,
               "legend": false
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            },
-            "lineStyle": {
-              "fill": "solid"
             }
           },
           "color": {
             "mode": "palette-classic"
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
+          "mappings": []
         },
         "overrides": []
       },
@@ -89,26 +51,32 @@
       },
       "id": 1,
       "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": ""
+        },
+        "pieType": "pie",
         "tooltip": {
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
         },
         "legend": {
           "showLegend": true,
           "displayMode": "list",
-          "placement": "bottom",
-          "calcs": []
+          "placement": "bottom"
         }
       },
       "targets": [
         {
-          "columnId": "subreddit",
-          "columnTime": "api_timestamp",
-          "columnValue": "row_count",
           "datasource": {
             "type": "hadesarchitect-cassandra-datasource",
             "uid": "Yc87Z6OJ4wsv"
           },
+          "columnId": "subreddit",
+          "columnValue": "row_count",
           "datasourceId": 1,
           "keyspace": "reddit",
           "queryType": "query",
@@ -119,100 +87,8 @@
         }
       ],
       "title": "Number of Rows per Subreddit",
-      "type": "barchart"
-    },
-    {
-      "datasource": {
-        "type": "hadesarchitect-cassandra-datasource",
-        "uid": "Yc87Z6OJ4wsv"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "series",
-            "axisLabel": "Sentiment Score",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 24,
-        "x": 0,
-        "y": 12
-      },
-      "id": 2,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "hadesarchitect-cassandra-datasource",
-            "uid": "Yc87Z6OJ4wsv"
-          },
-          "datasourceId": 1,
-          "queryType": "query",
-          "rawQuery": true,
-          "refId": "A",
-          "target": "SELECT subreddit, COUNT(*) AS comment_count FROM reddit.comments WHERE subreddit IN ('india', 'usa', 'unitedkingdom', 'australia', 'russia', 'china') AND ingest_timestamp > $__timeFrom AND ingest_timestamp < $__timeTo GROUP BY subreddit ALLOW FILTERING;"
-        }
-      ],
-      "title": "Countries",
-      "type": "timeseries"
+      "type": "piechart",
+      "pluginVersion": "9.5.2"
     }
   ],
   "refresh": "1s",
